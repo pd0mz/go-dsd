@@ -8,6 +8,11 @@ package dsd
 #include <stdlib.h>
 #include <mbelib.h>
 
+// Compat with change from mbelib 433e5227eea017fbf91dc090032515da9e286ac8
+#ifndef _AMBE3600x2450_CONST_H
+#define mbe_processAmbe3600x2450Framef mbe_processAmbe3600x2250Framef
+#endif
+
 #define VOICESTREAMS_DECODED_AMBE_FRAME_SAMPLES_COUNT	160
 
 typedef uint8_t flag_t;
@@ -118,7 +123,7 @@ voicestreams_decoded_frame_t *voicestreams_decode_ambe_frame(voicestream_t *voic
 		z++;
 	}
 
-	mbe_processAmbe3600x2250Framef(decoded_frame.samples, &errs, &errs2, err_str, deinterleaved_ambe_frame_bits, ambe_d, &voicestream->cur_mp, &voicestream->prev_mp, &voicestream->prev_mp_enhanced, voicestream->decodequality);
+	mbe_processAmbe3600x2450Framef(decoded_frame.samples, &errs, &errs2, err_str, deinterleaved_ambe_frame_bits, ambe_d, &voicestream->cur_mp, &voicestream->prev_mp, &voicestream->prev_mp_enhanced, voicestream->decodequality);
 
 	if (errs2 > 0)
 		fprintf(stderr, "dsd/ambe: mbelib decoding errors: %u %s\n", errs2, err_str);
