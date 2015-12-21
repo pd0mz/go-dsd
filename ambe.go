@@ -8,11 +8,6 @@ package dsd
 #include <stdlib.h>
 #include <mbelib.h>
 
-// Compat with change from mbelib 433e5227eea017fbf91dc090032515da9e286ac8
-#ifndef _AMBE3600x2450_CONST_H
-#define mbe_processAmbe3600x2450Framef mbe_processAmbe3600x2250Framef
-#endif
-
 #define VOICESTREAMS_DECODED_AMBE_FRAME_SAMPLES_COUNT	160
 
 typedef uint8_t flag_t;
