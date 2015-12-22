@@ -12,6 +12,27 @@ func f32stoi32s(f []float32) []int32 {
 	return i
 }
 
+func f32tou16(f float32) uint16 {
+	switch {
+	case f < -1.0:
+		return 0
+	case f < 0:
+		return uint16(f * -32768.0)
+	case f > 1.0:
+		return 65535
+	default:
+		return uint16(f * 32768.0)
+	}
+}
+
+func f32stou16s(f []float32) []uint16 {
+	var u = make([]uint16, len(f))
+	for j, k := range f {
+		u[j] = f32tou16(k)
+	}
+	return u
+}
+
 func i32tou16(i int32) uint16 {
 	if i < 0 {
 		return uint16(i>>16) ^ 0x8000

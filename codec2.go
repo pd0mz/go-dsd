@@ -62,17 +62,14 @@ func (vs *Codec2) Decode(bits []byte) ([]float32, error) {
 	return u16stof32s(u), nil
 }
 
-func (vs *Codec2) Encode(samples []int32) ([]byte, error) {
+func (vs *Codec2) Encode(samples []float32) ([]byte, error) {
 	if len(samples) != vs.samplesPerFrame {
 		return nil, fmt.Errorf("dsd: codec2 required %d samples per frame, got %d", vs.samplesPerFrame, len(samples))
 	}
 	var (
-		s    = i32stou16s(samples)
+		s    = f32stou16s(samples)
 		bits = make([]byte, vs.bitsPerFrame)
 	)
-	for i, sample := range samples {
-		s[i] = i32tou16(sample)
-	}
 	C.codec2_encode(vs.codec2, (*C.uchar)(unsafe.Pointer(&bits[0])), (*C.short)(unsafe.Pointer(&s[0])))
 	return bits, nil
 }
