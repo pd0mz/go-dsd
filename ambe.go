@@ -1,7 +1,7 @@
 package dsd
 
-// #cgo CFLAGS: -Iinclude
-// #cgo LDFLAGS: -lm -lmbe
+// #cgo CFLAGS: -Iinclude -I/usr/local/include -L/usr/local/lib
+// #cgo LDFLAGS: -lm -lmbe -L/usr/local/lib
 /*
 #include <stdio.h>
 #include <stdint.h>
@@ -161,17 +161,17 @@ import (
 
 type AMBEVoiceDecodeQuality uint8
 
-type AMBEVoiceStream struct {
+type AMBE struct {
 	voicestream *C.voicestream_t
 }
 
-func NewAMBEVoiceStream(qual AMBEVoiceDecodeQuality) *AMBEVoiceStream {
-	vs := &AMBEVoiceStream{}
+func NewAMBE(qual AMBEVoiceDecodeQuality) *AMBE {
+	vs := &AMBE{}
 	vs.voicestream = C.init_voicestream(C.uint8_t(qual))
 	return vs
 }
 
-func (vs *AMBEVoiceStream) Decode(bits []byte) ([]float32, error) {
+func (vs *AMBE) Decode(bits []byte) ([]float32, error) {
 	if len(bits) != 216 {
 		return nil, fmt.Errorf("need 216 bits, got %d", len(bits))
 	}
@@ -185,7 +185,13 @@ func (vs *AMBEVoiceStream) Decode(bits []byte) ([]float32, error) {
 	return samples, nil
 }
 
-func (vs *AMBEVoiceStream) Close() {
+func (vs *AMBE) Close() error {
+	if vs.voicestream == nil {
+		return ErrClosed
+	}
 	C.free_voicestream(vs.voicestream)
 	vs.voicestream = nil
+	return nil
 }
+
+var _ (Decoder) = (*AMBE)(nil)
